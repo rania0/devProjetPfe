@@ -1,5 +1,7 @@
 package com.example.backend.controller;
 
+import com.example.backend.dto.RefusDTO;
+import com.example.backend.dto.ResponsablePointDeVenteDTO;
 import com.example.backend.dto.UpdateUserRequest;
 import com.example.backend.dto.UtilisateurSummaryDTO;
 import com.example.backend.entity.PtVente;
@@ -18,6 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+import com.example.backend.service.ResponsablePointDeVenteService;
 
 
 @RestController
@@ -36,6 +39,11 @@ public class UtilisateurController {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private PtVenteRepository ptVenteRepository;
+    @Autowired
+    private ResponsablePointDeVenteService responsablePointVenteService;
+    @Autowired
+    private ResponsablePointDeVenteService responsableService;
+
 
 
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -95,6 +103,8 @@ public class UtilisateurController {
         if (request.getNomSociete() != null) utilisateur.setNomSociete(request.getNomSociete());
         if (request.getNumIdentificationEntreprise() != null) utilisateur.setNumIdentificationEntreprise(request.getNumIdentificationEntreprise());
         if (request.getContractActif() != null) utilisateur.setContractActif(request.getContractActif());
+        if (request.getType() != null) utilisateur.setType(request.getType());
+
 
         // ✅ تحويل `String` إلى `Date`
         try {
@@ -197,8 +207,32 @@ public class UtilisateurController {
                 .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
         return ResponseEntity.ok(utilisateur);
     }
+    @GetMapping("/demandes/attente")
+    public ResponseEntity<List<ResponsablePointDeVenteDTO>> getDemandesEnAttente() {
+        List<ResponsablePointDeVenteDTO> demandes = responsablePointVenteService.getDemandesEnAttente();
+        return ResponseEntity.ok(demandes);
+    }
 
+    @PutMapping("/demande/{id}/accepter")
+    public ResponseEntity<String> accepterDemande(@PathVariable Long id) {
+        responsableService.accepterDemande(id);
+        return ResponseEntity.ok("Responsable accepté et email envoyé !");
+    }
 
+    @PutMapping("/demande/refuser")
+    public ResponseEntity<String> refuserDemande(@RequestBody RefusDTO refusDTO) {
+        try {
+            responsableService.refuserDemande(refusDTO.getResponsableId(), refusDTO.getRaison());
+            return ResponseEntity.ok("Demande refusée et email envoyé.");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Erreur : " + e.getMessage());
+        }
+    }
+    @GetMapping("/demandes/traitees")
+    public ResponseEntity<List<ResponsablePointDeVenteDTO>> getDemandesTraitees() {
+        List<ResponsablePointDeVenteDTO> demandes = responsablePointVenteService.getDemandesTraitees();
+        return ResponseEntity.ok(demandes);
+    }
 
 
 

@@ -1,0 +1,175 @@
+/* Style général */
+.dashboard-container {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.add-user-btn {
+    background-color: #d2d2f4;
+    color: rgb(12, 11, 11);
+    border:#dadae5 3px solid;
+    padding: 10px 15px;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+.add-user-btn:hover {
+    transform: scale(1.1); 
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Style des boutons de filtre */
+.filters {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.filter-btn {
+    padding: 8px 12px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 14px;
+    font-family: Arial, sans-serif;
+    color: #626466;
+    background-color: #e9e9ed;
+}
+
+.filter-btn.active {
+    background-color: #c3c2c6;
+    color: rgb(15, 15, 15);
+    font-size: 15px;
+}
+
+/* Style du tableau */
+.user-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+}
+
+.user-table th, .user-table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Style des initiales */
+.user-name {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.initials {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%; /* Rend l'élément circulaire */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: rgb(248, 239, 239);
+    text-transform: uppercase;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+
+/* Style des rôles avec couleurs */
+.role {
+    display: inline-block;
+    margin-top: 8%;
+    font-size: 15px;
+    border-radius: 6px;
+    color: white;
+    background-color: #6c757d; 
+    
+}
+
+
+.magasinier {
+    background-color: #d1e2f2;
+    color:#1188f7 ;
+    border: solid 1px #1188f7;
+}
+
+.livreur {
+    background-color: #eae3ce;
+    color: #f7bb09;
+    border: solid 1px #f7bb09;
+}
+
+.fournisseur {
+    background-color: #eed6d9;
+    color: #ed3749;
+    border: solid 1px #ed3749;
+}
+
+.responsable_point_vente {
+    background-color: #cae3d0;
+    color: #13fa49;
+    border: solid 1px #13fa49;
+    
+}
+
+/* Style des boutons d'action */
+.edit-btn {
+    background-color: #e2f9e9;
+    color: rgb(12, 11, 11);
+    border:#dadae5 3px solid;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    padding: 8px 10px;
+    margin-right: 6px;
+}
+.edit-btn:hover {
+    transform: scale(1.05); 
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.delete-btn {
+    background-color: #f5dddb;
+    color: rgb(12, 11, 11);
+    border:#dadae5 3px solid;
+    padding: 8px 10px;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+.delete-btn:hover {
+    transform: scale(1.05); 
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+
+.status-badge {
+    font-weight: bold;
+    padding: 4px 10px;
+    border-radius: 8px;
+    text-align: center;
+    display: inline-block;
+  }
+  
+  .status-badge.accepte {
+    background-color: #c6f6d5;
+    color: #276749;
+  }
+  
+  .status-badge.refuse {
+    background-color: #fed7d7;
+    color: #822727;
+  }
+  

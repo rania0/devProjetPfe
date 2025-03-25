@@ -40,8 +40,12 @@ public class SecurityConfig {
                     config.setAllowCredentials(true);
                     return config;
                 }))
+                .headers(headers -> headers.frameOptions(frame -> frame.disable()))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/login", "/api/auth/refresh").permitAll()
+                        .requestMatchers("/api/contract/**").permitAll()
+                        .requestMatchers("/api/responsable/**").permitAll()
+                        .requestMatchers("/api/point_vente/all").permitAll()
                         .requestMatchers("/api/admin/**").hasAuthority("ROLE_admin" )
                         //.requestMatchers("/api/admin/**").hasAnyAuthority("ROLE_admin", "admin")
 
@@ -50,6 +54,9 @@ public class SecurityConfig {
                         .requestMatchers("/api/livreur/**").hasAuthority("ROLE_livreur")
                         //.requestMatchers("/api/point_vente/**").hasAuthority("ROLE_responsable_point_vente")
                         .requestMatchers("/api/point_vente/**").hasAnyAuthority("ROLE_admin", "ROLE_magasinier", "ROLE_livreur")
+
+
+
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

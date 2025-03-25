@@ -1,5 +1,6 @@
 package com.example.backend.service;
 
+import com.example.backend.entity.ResponsablePointDeVente;
 import com.example.backend.entity.Utilisateur;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -99,4 +100,43 @@ public class EmailService {
 
         return template;
     }
+    public void envoyerEmailConfirmationResponsable(ResponsablePointDeVente responsable, String rawPassword)
+            throws MessagingException, IOException {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+        helper.setTo(responsable.getEmail());
+        helper.setSubject("✅ Confirmation d'inscription");
+
+        String body = "Bonjour " + responsable.getPrenom() + " " + responsable.getNom() + ",\n\n"
+                + "Votre demande a été acceptée.\n"
+                + "Voici vos identifiants pour vous connecter à la plateforme :\n\n"
+                + "📧 Email : " + responsable.getEmail() + "\n"
+                + "🔐 Mot de passe : " + rawPassword + "\n\n" // ✅ corriger ici
+                + "Merci de vous connecter depuis l'application web.";
+
+        helper.setText(body);
+        mailSender.send(message);
+    }
+    public void envoyerEmailRefusResponsable(ResponsablePointDeVente responsable, String raison)
+            throws MessagingException {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+        helper.setTo(responsable.getEmail());
+        helper.setSubject("❌ Refus de votre demande d'inscription");
+
+        String body = "Bonjour " + responsable.getPrenom() + " " + responsable.getNom() + ",\n\n"
+                + "Nous vous informons que votre demande d'inscription a été refusée.\n\n"
+                + "📝 Raison du refus : " + raison + "\n\n"
+                + "Pour plus d'informations, veuillez contacter notre support.\n\n"
+                + "Merci.";
+
+        helper.setText(body);
+        mailSender.send(message);
+    }
+
+
+
+
 }

@@ -1,0 +1,69 @@
+.stepper-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .step-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .step-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #d3d3d3;
+    color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    transition: background-color 0.4s ease, color 0.4s ease;
+  }
+  
+  .step-item.active .step-circle {
+    background-color: #3b82f6; /* Couleur pour l'étape en cours */
+    color: white;
+  }
+  
+  .step-item.completed .step-circle {
+    background-color: #10b981; /* Vert pour les étapes terminées */
+    color: white;
+  }
+  
+
+  .button-primary {
+    background-color: #3b82f6;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-left: 10px;
+    margin-top: 20px;
+  }
+  
+  .button-primary:hover {
+    background-color: #2563eb;
+  }
+  
+  .button-secondary {
+    background-color: #6b7280;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-right: 10px;
+    margin-top: 20px;
+  }
+  
+  .button-secondary:hover {
+    background-color: #4b5563;
+  }
+  

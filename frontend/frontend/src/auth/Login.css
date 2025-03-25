@@ -1,0 +1,140 @@
+/* Style global */
+body {
+    font-family: "Poppins", sans-serif;
+    background-color: #f5f6fa;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+/* Conteneur du formulaire */
+.loginn-wrap {
+    background: #ffffff;
+    padding: 50px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 350px;
+}
+.user-icon {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%; /* Rond */
+}
+
+
+/* Icône utilisateur */
+.icon {
+    width: 80px;
+    height: 80px;
+    background: #007bff;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    margin: 0 auto 15px;
+}
+
+.icon i {
+    font-size: 32px;
+}
+
+/* Titre */
+h3 {
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #222;
+}
+
+/* Champs de saisie + bouton de connexion */
+.input-group {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-controll {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    height: 35px;  /* 🔹 Réduction de la hauteur */
+    font-size: 16px;
+    padding: 8px;
+    width: 345px;
+    color: gray;
+    margin-bottom: 15px;
+    background: #f8f9fa;
+    text-align: left;
+    transition: border-color 0.3s ease-in-out;
+}
+
+/* Bordure bleue quand l'input est sélectionné */
+.form-control:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+}
+
+/* Bouton Login - même largeur que les inputs */
+.btn-primary {
+    background: #007bff;
+    border: none;
+    cursor: pointer;
+    color: white;
+    font-weight: bold;
+    height: 48px; /* 🔹 Même hauteur que les inputs */
+    width: 365px; /* 🔹 Même largeur que les inputs */
+    border-radius: 5px;
+    font-size: 16px;
+    text-align: center;
+    
+}
+
+.btn-primary:hover {
+    background: #0056b3;
+}
+
+/* Checkbox + lien mot de passe */
+.form-group.d-md-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+
+
+/* Style du checkbox */
+.checkbox-wrap {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    color: #007bff;
+    gap: 8px; /* 🔹 Espace entre texte et checkbox */
+}
+
+/* Mettre la checkbox à droite */
+.checkbox-wrap input {
+    accent-color: #007bff; /* 🔹 Couleur bleue au clic */
+    transform: scale(1.2); /* 🔹 Agrandir un peu */
+    cursor: pointer;
+}
+
+
+
+
+
+/* Lien Forgot Password */
+.text-md-right a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.text-md-right a:hover {
+    text-decoration: underline;
+}
