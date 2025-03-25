@@ -69,6 +69,19 @@ public class UtilisateurService {
                     user.setContractActif(true);
                 }
                 break;
+            case "centre_regional":
+
+                user.setNumSecuritySocial(null);
+                user.setNumConduit(null);
+                user.setPointVente(null);
+                user.setNom(null);
+                user.setPrenom(null);
+                user.setDateEmbauche(null);
+                user.setCin(null);
+                user.setType(null);
+
+                break;
+
 
             case "magasinier":
             case "admin":
@@ -80,6 +93,7 @@ public class UtilisateurService {
                 user.setNumConduit(null);
                 user.setPointVente(null);
                 user.setCodePostal(null);
+                user.setType(null);
                 break;
 
             case "responsable_point_vente":
@@ -89,6 +103,7 @@ public class UtilisateurService {
                 user.setDateSignatureContract(null);
                 user.setDateExpirationContract(null);
                 user.setNumConduit(null);
+                user.setType(null);
                 break;
 
             case "livreur":

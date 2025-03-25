@@ -10,11 +10,26 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.List;
+
 @Component
 public class JWTFilter extends OncePerRequestFilter {
 
     @Autowired
     private JWTUtil jwtUtil;
+    private static final List<String> WHITELIST = List.of(
+            "/api/contract/sign",
+            "/api/contract/generate",
+            "/api/contract/uploadSignature",
+            "/api/responsable/confirm",
+            "/api/point_vente/all"
+    );
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        return WHITELIST.stream().anyMatch(uri -> request.getRequestURI().startsWith(uri));
+    }
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,

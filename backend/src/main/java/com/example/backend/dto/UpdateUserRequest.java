@@ -19,10 +19,19 @@ public class UpdateUserRequest {
     private String numConduit;
     private String numSecuritySocial;
     private Long pointVente;
+    private String type;
+
 
     // ✅ Getters and Setters
     public String getNom() { return nom; }
     public void setNom(String nom) { this.nom = nom; }
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public String getMotPasse() {
         return motPasse;

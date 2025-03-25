@@ -32,11 +32,16 @@ public class Utilisateur {
     private String ville;
     private String codePostal;
     private Date dateEmbauche;
+    private String type;
+
+
     private String refreshToken;
 
     @ManyToOne
     @JoinColumn(name = "idPt", referencedColumnName = "idP")
     private PtVente pointVente;  // relation vers point de vente
+
+
 
     // Getters and Setters
     public Long getIdPt() {
@@ -54,6 +59,13 @@ public class Utilisateur {
             this.pointVente = new PtVente();
         }
         this.pointVente.setIdP(idPt);
+    }
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public Long getIdU() {
