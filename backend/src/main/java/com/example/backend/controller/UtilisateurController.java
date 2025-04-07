@@ -5,14 +5,16 @@ import com.example.backend.dto.ResponsablePointDeVenteDTO;
 import com.example.backend.dto.UpdateUserRequest;
 import com.example.backend.dto.UtilisateurSummaryDTO;
 import com.example.backend.entity.PtVente;
+import com.example.backend.entity.ResponsablePointDeVente;
 import com.example.backend.entity.Utilisateur;
 import com.example.backend.repository.PtVenteRepository;
+import com.example.backend.repository.ResponsablePointDeVenteRepository;
 import com.example.backend.repository.UtilisateurRepository;
 import com.example.backend.security.JWTUtil;
 import com.example.backend.service.EmailService;
 import com.example.backend.service.UtilisateurService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import java.text.ParseException;
@@ -21,6 +23,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import com.example.backend.service.ResponsablePointDeVenteService;
+import org.springframework.web.server.ResponseStatusException;
 
 
 @RestController
@@ -43,6 +46,8 @@ public class UtilisateurController {
     private ResponsablePointDeVenteService responsablePointVenteService;
     @Autowired
     private ResponsablePointDeVenteService responsableService;
+    @Autowired
+    private ResponsablePointDeVenteRepository responsableRepository;
 
 
 
@@ -233,6 +238,20 @@ public class UtilisateurController {
         List<ResponsablePointDeVenteDTO> demandes = responsablePointVenteService.getDemandesTraitees();
         return ResponseEntity.ok(demandes);
     }
+    @GetMapping("/api/admin/contrat/{id}")
+    public ResponseEntity<byte[]> getContratPDF(@PathVariable Long id) {
+        ResponsablePointDeVente responsable = responsableRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Responsable non trouvé"));
+
+        byte[] contratPdf = responsable.getContractSigned(); // adapte le nom selon ton entité
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDisposition(ContentDisposition.inline().filename("contrat.pdf").build());
+
+        return new ResponseEntity<>(contratPdf, headers, HttpStatus.OK);
+    }
+
 
 
 

@@ -74,17 +74,21 @@ public class EmailService {
     }
 
     // ✅ 3️⃣ إرسال البريد عند تغيير كلمة المرور
-    public void envoyerEmailChangementMotDePasse(Utilisateur utilisateur, String nouveauMotDePasse) throws MessagingException, IOException {
+    public void envoyerEmailChangementMailSansMotDePasse(Utilisateur utilisateur)
+            throws MessagingException, IOException {
+
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
         helper.setTo(utilisateur.getMail());
-        helper.setSubject("🔐 Mise à jour de votre mot de passe");
+        helper.setSubject("✉️ Mise à jour de votre adresse e-mail");
 
-        // Lire et remplir le template HTML
-        String emailContent = lireTemplateChangementMotDePasse(utilisateur, nouveauMotDePasse);
-        helper.setText(emailContent, true);
+        String body = "Bonjour " + utilisateur.getPrenom() + " " + utilisateur.getNom() + ",\n\n"
+                + "Votre adresse e-mail a été mise à jour avec succès.\n"
+                + "Vos identifiants restent inchangés.\n\n"
+                + "Merci de continuer à utiliser notre plateforme.";
 
+        helper.setText(body);
         mailSender.send(message);
     }
 

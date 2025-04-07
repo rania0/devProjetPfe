@@ -45,11 +45,16 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/login", "/api/auth/refresh").permitAll()
                         .requestMatchers("/api/contract/**").permitAll()
                         .requestMatchers("/api/responsable/**").permitAll()
+                        .requestMatchers("/api/catalogue/**").permitAll()
                         .requestMatchers("/api/point_vente/all").permitAll()
                         .requestMatchers("/api/admin/**").hasAuthority("ROLE_admin" )
+
                         //.requestMatchers("/api/admin/**").hasAnyAuthority("ROLE_admin", "admin")
 
-
+                        .requestMatchers("/api/session-commande/**").hasAuthority("ROLE_magasinier")
+                        .requestMatchers("/api/commande/**").hasAuthority("ROLE_responsable_point_vente")
+                        .requestMatchers("/api/preparation/**").hasAuthority("ROLE_magasinier")
+                        .requestMatchers("/api/fournisseur/**").hasAuthority("ROLE_fournisseur")
                         .requestMatchers("/api/magasinier/**").hasAuthority("ROLE_magasinier")
                         .requestMatchers("/api/livreur/**").hasAuthority("ROLE_livreur")
                         //.requestMatchers("/api/point_vente/**").hasAuthority("ROLE_responsable_point_vente")

@@ -21,6 +21,14 @@ public class ResponsablePointDeVenteDTO {
     private Long pointDeVenteId;
     private String status;
     private String type;
+    private String contratUrl;
+    public String getContratUrl() {
+        return contratUrl;
+    }
+
+    public void setContratUrl(String contratUrl) {
+        this.contratUrl = contratUrl;
+    }
     public String getStatus() {
         return status;
     }

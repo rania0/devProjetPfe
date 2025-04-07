@@ -13,7 +13,7 @@ import Sidebar from "./components/Sidebar";
 import ModifierProfil from "./profile/ModifierProfil";
 import ResponsableInscription from "./responsable_point_vente/inscription_responsable/Inscription";
 import PageDemandes from "./admin/PageDemandes";
-
+import CreerSessionCommande from "./magasinier/CreerSessionCommande";
 // ✅ Vérifier si l'utilisateur est connecté
 const isAuthenticated = () => !!localStorage.getItem("accessToken");
 
@@ -67,6 +67,8 @@ function App() {
                         <Layout>
                             <Routes>
                                 <Route path="dashboard" element={<TestMagasinier />} />
+                                <Route path="session/creer" element={<CreerSessionCommande />} />
+
                             </Routes>
                         </Layout>
                     }

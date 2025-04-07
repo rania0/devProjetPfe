@@ -28,5 +28,7 @@ public interface UtilisateurRepository extends JpaRepository<Utilisateur, Long> 
     List<Utilisateur> findByNumTelContaining(String numTel);
     @Query("SELECT u FROM Utilisateur u WHERE u.role <> 'admin'")
     List<Utilisateur> findAllNonAdminUsers();
+    List<Utilisateur> findByRoleAndType(String role, String type);
+
 
 }
