@@ -12,13 +12,11 @@ import com.example.backend.service.ContractService;
 import com.example.backend.service.ResponsablePointDeVenteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.UrlResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.core.io.Resource;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.File;
 import java.io.IOException;
@@ -227,6 +225,19 @@ public ResponseEntity<String> generateContract(@RequestBody ResponsablePointDeVe
         } catch (Exception e) {
             return ResponseEntity.internalServerError().build();
         }
+    }
+    @GetMapping("/contrat/{id}")
+    public ResponseEntity<byte[]> getContratPDFPublic(@PathVariable Long id) {
+        ResponsablePointDeVente responsable = responsableRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Responsable non trouvé"));
+
+        byte[] contratPdf = responsable.getContractSigned();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDisposition(ContentDisposition.inline().filename("contrat.pdf").build());
+
+        return new ResponseEntity<>(contratPdf, headers, HttpStatus.OK);
     }
 
 

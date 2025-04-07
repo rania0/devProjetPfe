@@ -31,7 +31,12 @@ const Sidebar = () => {
                 </>
             )}
 
-            {userRole === "magasinier" && <Link to="/magasinier/dashboard">Dashboard Magasinier</Link>}
+{userRole === "magasinier" && (
+  <>
+    <Link to="/magasinier/dashboard">Dashboard Magasinier</Link>
+    <Link to="/magasinier/session/creer">Créer Session de commande</Link>
+  </>
+)}
             {userRole === "livreur" && <Link to="/livreur/dashboard">Dashboard Livreur</Link>}
             {userRole === "responsable_point_vente" && <Link to="/point-vente/dashboard">Dashboard Point de Vente</Link>}
             {userRole === "fournisseur" && <Link to="/fournisseur/dashboard">Dashboard Fournisseur</Link>}

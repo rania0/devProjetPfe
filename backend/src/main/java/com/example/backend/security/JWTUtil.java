@@ -15,18 +15,24 @@ import java.util.Date;
 public class JWTUtil {
 
     private final SecretKey secretKey;
+//    @Value("${jwt.secret}")
+//    private String secret;
 
-    public JWTUtil(@Value("${app.jwt.secret}") String secret) {
-        byte[] keyBytes = Decoders.BASE64.decode(secret);  // Vérifier qu'on ne fait pas un double encodage
-        this.secretKey = Keys.hmacShaKeyFor(keyBytes);
-    }
+//    public JWTUtil(@Value("${app.jwt.secret}") String secret) {
+//        byte[] keyBytes = Decoders.BASE64.decode(secret);  // Vérifier qu'on ne fait pas un double encodage
+//        this.secretKey = Keys.hmacShaKeyFor(keyBytes);
+//    }
+public JWTUtil(@Value("${jwt.secret}") String secret) {
+    byte[] keyBytes = Decoders.BASE64.decode(secret);
+    this.secretKey = Keys.hmacShaKeyFor(keyBytes);
+}
 
     // ✅ Générer un token d'accès avec "ROLE_"
     public String generateToken(String mail, String role) {
         System.out.println("ROLE ENCODED: " + role); // 🔥 Ajouté pour DEBUG
         return Jwts.builder()
                 .setSubject(mail)
-                .claim("role", "ROLE_" + role) // ✅ On ajoute toujours "ROLE_"
+                .claim("role", role)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60)) // 1h
                 .signWith(secretKey, SignatureAlgorithm.HS256)
@@ -44,6 +50,25 @@ public class JWTUtil {
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24)) // Expiration 24 heures
                 .signWith(secretKey, SignatureAlgorithm.HS256)
                 .compact();
+    }
+
+    /**
+     * ✅ Méthode pour extraire l'email (ou username) depuis le token
+     */
+    public String extractUsername(String token) {
+        return extractAllClaims(token).getSubject(); // le subject contient l'email
+    }
+
+    /**
+     * ⚙️ Méthode utilitaire pour parser le token et extraire tous les claims
+     */
+    private Claims extractAllClaims(String token) {
+        return Jwts
+                .parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
 
     public Claims extractClaims(String token) {

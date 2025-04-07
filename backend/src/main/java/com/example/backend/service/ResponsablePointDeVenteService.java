@@ -86,24 +86,44 @@ public class ResponsablePointDeVenteService {
 
         return "Inscription réussie. Vous devez générer le contrat manuellement.";
     }
-    public List<ResponsablePointDeVenteDTO> getDemandesEnAttente() {
-        List<ResponsablePointDeVente> responsables = responsablePointDeVenteRepository.findByStatus(StatutResponsable.EN_ATTENTE);
+//    public List<ResponsablePointDeVenteDTO> getDemandesEnAttente() {
+//        List<ResponsablePointDeVente> responsables = responsablePointDeVenteRepository.findByStatus(StatutResponsable.EN_ATTENTE);
+//
+//
+//        return responsables.stream().map(respo -> {
+//            ResponsablePointDeVenteDTO dto = new ResponsablePointDeVenteDTO();
+//            dto.setId(respo.getId());
+//            dto.setNom(respo.getNom());
+//            dto.setPrenom(respo.getPrenom());
+//            dto.setEmail(respo.getEmail());
+//            dto.setTelephone(respo.getTelephone());
+//            dto.setCin(respo.getCin());
+//            dto.setAdresse(respo.getAdresse());
+//            dto.setTypeActivite(respo.getTypeActivite());
+//            dto.setPointDeVenteId(respo.getPointDeVente().getIdP());
+//            return dto;
+//        }).toList();
+//    }
+public List<ResponsablePointDeVenteDTO> getDemandesEnAttente() {
+    List<ResponsablePointDeVente> responsables = responsablePointDeVenteRepository.findByStatus(StatutResponsable.EN_ATTENTE);
 
 
-        return responsables.stream().map(respo -> {
-            ResponsablePointDeVenteDTO dto = new ResponsablePointDeVenteDTO();
-            dto.setId(respo.getId());
-            dto.setNom(respo.getNom());
-            dto.setPrenom(respo.getPrenom());
-            dto.setEmail(respo.getEmail());
-            dto.setTelephone(respo.getTelephone());
-            dto.setCin(respo.getCin());
-            dto.setAdresse(respo.getAdresse());
-            dto.setTypeActivite(respo.getTypeActivite());
-            dto.setPointDeVenteId(respo.getPointDeVente().getIdP());
-            return dto;
-        }).toList();
-    }
+    return responsables.stream().map(respo -> {
+        ResponsablePointDeVenteDTO dto = new ResponsablePointDeVenteDTO();
+        dto.setId(respo.getId());
+        dto.setNom(respo.getNom());
+        dto.setPrenom(respo.getPrenom());
+        dto.setEmail(respo.getEmail());
+        dto.setTelephone(respo.getTelephone());
+        dto.setCin(respo.getCin());
+        dto.setAdresse(respo.getAdresse());
+        dto.setTypeActivite(respo.getTypeActivite());
+        dto.setPointDeVenteId(respo.getPointDeVente().getIdP());
+        dto.setContratUrl("http://localhost:9090/api/contract/contrat/" + respo.getId());
+
+        return dto;
+    }).toList();
+}
     public void accepterDemande(Long responsableId) {
         ResponsablePointDeVente responsable = responsableRepository.findById(responsableId)
                 .orElseThrow(() -> new RuntimeException("Responsable non trouvé"));

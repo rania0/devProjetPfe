@@ -148,14 +148,18 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import "./dashboard.css";
+import { FaInfoCircle } from "react-icons/fa";
 
 const PageDemandes = () => {
   const [enAttente, setEnAttente] = useState([]);
   const [traitees, setTraitees] = useState([]);
-
+  const [selectedContratUrl, setSelectedContratUrl] = useState(null);
   useEffect(() => {
     fetchDemandes();
   }, []);
+  const handleVoirContrat = (url) => {
+    setSelectedContratUrl(url);
+  };
 
   const fetchDemandes = async () => {
     const token = localStorage.getItem("accessToken");
@@ -292,6 +296,21 @@ const PageDemandes = () => {
               <td>
                 <button className="edit-btn" onClick={() => handleAccepter(respo.id)}>✅ Accepter</button>
                 <button className="delete-btn" onClick={() => handleRefuser(respo.id)}>❌ Refuser</button>
+                <button
+  onClick={() => handleVoirContrat(respo.contratUrl)}
+  style={{
+    background: "transparent",
+    border: "none",
+    cursor: "pointer",
+    color: "#3498db", // couleur bleue info
+    fontSize: "20px",
+    marginLeft: "10px"
+  }}
+  title="Voir contrat"
+>
+  <FaInfoCircle />
+</button>
+
               </td>
             </tr>
           ))}
@@ -320,7 +339,27 @@ const PageDemandes = () => {
             </tr>
           ))}
         </tbody>
+       
+
       </table>
+      {selectedContratUrl && (
+  <div className="modal-overlay">
+    <div className="modal-content">
+      <button className="close-button" onClick={() => setSelectedContratUrl(null)}>
+        &times;
+      </button>
+      <h3 style={{ marginBottom: "10px" }}>📄 Contrat signé</h3>
+      <iframe
+        src={selectedContratUrl}
+        width="100%"
+        height="500px"
+        title="Contrat PDF"
+        style={{ border: "1px solid #ccc", borderRadius: "5px" }}
+      />
+    </div>
+  </div>
+)}
+
     </div>
   );
 };
