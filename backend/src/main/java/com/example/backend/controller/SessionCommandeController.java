@@ -9,6 +9,7 @@ import com.example.backend.repository.CommandeRepository;
 import com.example.backend.repository.SessionCommandeRepository;
 import com.example.backend.repository.UtilisateurRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -68,5 +69,18 @@ public class SessionCommandeController {
 
         return new ArrayList<>(map.values());
     }
+    @GetMapping("/last-closed")
+    public ResponseEntity<Long> getLastClosedSessionId() {
+        List<SessionCommande> sessions = sessionCommandeRepository.findAllByDateFinBeforeNowOrderByDateFinDesc();
+
+        if (sessions.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(sessions.get(0).getId()); // le dernier clôturé
+    }
+
+
+
 
 }

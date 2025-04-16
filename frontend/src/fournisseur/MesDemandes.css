@@ -1,0 +1,150 @@
+/* 🎨 Palette utilisée :
+   - Bleu principal : #007bff
+   - Bleu clair fond : #e6f0ff
+   - Vert succès : #28a745
+   - Rouge refus : #dc3545
+   - Gris doux : #f8f9fa */
+
+   .mes-demandes-container {
+    background-color: #f8f9fa;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    max-width: 1000px;
+    margin: auto;
+  }
+  
+  .mes-demandes-container h2 {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+    color: #007bff;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .table-demandes {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.05);
+  }
+  
+  .table-demandes th {
+    background-color: #e6f0ff;
+    color: #007bff;
+    padding: 12px;
+    text-align: left;
+    font-weight: 600;
+  }
+  
+  .table-demandes td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .table-demandes tr:last-child td {
+    border-bottom: none;
+  }
+  
+  .btn-accept {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-right: 5px;
+  }
+  
+  .btn-refuse {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  
+  .btn-accept:hover {
+    background-color: #218838;
+  }
+  
+  .btn-refuse:hover {
+    background-color: #c82333;
+  }
+  .notif-dot {
+    position: fixed;
+    top: 12px;
+    left: 185px;
+    font-size: 14px;
+    animation: blink 1s infinite;
+  }
+  
+  @keyframes blink {
+    0% { opacity: 0.1; }
+    50% { opacity: 1; }
+    100% { opacity: 0.1; }
+  }
+    
+  .etat-suivi {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #f4f6fa;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .etat-suivi h4 {
+    margin-bottom: 15px;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  /* 🟢 Container des étapes */
+  .progress-steps {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  
+  .step {
+    padding: 6px 12px;
+    border-radius: 20px;
+    margin: 0 5px;
+    background-color: #e0e0e0;
+    color: #333;
+    font-weight: bold;
+    cursor: default;
+    transition: all 0.3s ease;
+    user-select: none;
+  }
+  
+  .step.active {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .step.next {
+    background-color: #ffc107;
+    cursor: pointer;
+  }
+  
+  .step.inactive {
+    background-color: #cccccc;
+    color: #888;
+    cursor: not-allowed;
+  }
+  
+  .line {
+    width: 30px;
+    height: 3px;
+    background-color: #007bff;
+    margin: 0 5px;
+  }
+  

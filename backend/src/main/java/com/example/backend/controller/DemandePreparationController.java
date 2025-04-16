@@ -6,18 +6,20 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import com.example.backend.dto.AffectationRequest;
 import com.example.backend.dto.MagazineUploadResponse;
 import com.example.backend.entity.*;
-import com.example.backend.repository.DemandePreparationRepository;
-import com.example.backend.repository.ProduitDisponibleCommandeRepository;
-import com.example.backend.repository.SessionCommandeRepository;
-import com.example.backend.repository.UtilisateurRepository;
+import com.example.backend.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -37,62 +39,175 @@ public class DemandePreparationController {
 
     @Autowired
     private SessionCommandeRepository sessionCommandeRepository;
-    @PostMapping("/upload-magazine")
-    public ResponseEntity<MagazineUploadResponse> uploadMagazine(@RequestParam("file") MultipartFile file) {
-        try {
-            String uploadDir = "uploads/magazines/";
-            File dir = new File(uploadDir);
-            if (!dir.exists()) dir.mkdirs();
+    @Autowired
+    private CommandeRepository commandeRepository;
 
-            String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
-            Path filePath = Paths.get(uploadDir, fileName);
-            Files.write(filePath, file.getBytes());
-
-            String fileUrl = "/uploads/magazines/" + fileName;
-            return ResponseEntity.ok(new MagazineUploadResponse(fileName, fileUrl));
-
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new MagazineUploadResponse(null, "❌ Erreur lors de l'upload"));
-        }
-    }
-
-
-
-
-    @PostMapping("/affecter")
-    public ResponseEntity<?> affecterFournisseur(@RequestBody AffectationRequest request) {
-
-        // 🔍 Récupération produit
-        ProduitDisponibleCommande produit = produitDisponibleCommandeRepository.findById(request.getProduitId())
+@PostMapping("/upload-magazine")
+public ResponseEntity<String> uploadMagazinePDF(@RequestParam("file") MultipartFile file,
+                                                @RequestParam("produitId") Long produitId,
+                                                @RequestParam("sessionId") Long sessionId) {
+    try {
+        ProduitDisponibleCommande produit = produitDisponibleCommandeRepository.findById(produitId)
                 .orElseThrow(() -> new RuntimeException("Produit non trouvé"));
 
-        // 🔍 Récupération fournisseur
-        Utilisateur fournisseur = utilisateurRepository.findById(request.getFournisseurId())
-                .orElseThrow(() -> new RuntimeException("Fournisseur non trouvé"));
-
-        // 🔍 Récupération session
-        SessionCommande session = sessionCommandeRepository.findById(request.getSessionId())
+        SessionCommande session = sessionCommandeRepository.findById(sessionId)
                 .orElseThrow(() -> new RuntimeException("Session non trouvée"));
 
-        // 📦 Création de la demande
-        DemandePreparation demande = new DemandePreparation();
-        demande.setProduit(produit);
-        demande.setFournisseur(fournisseur);
-        demande.setSession(session);
-        demande.setQuantiteDemandee(request.getQuantite());
-        demande.setStatut(StatutDemandePreparation.EN_ATTENTE);
-        demande.setDateLimitePreparation(request.getDateLimite().atStartOfDay());
+        DemandePreparation demande = demandePreparationRepository
+                .findByProduit_IdAndSession_Id(produitId, sessionId)
+                .orElseThrow(() -> new RuntimeException("Demande introuvable pour ce produit et session"));
 
-        // 📰 Cas particulier pour les magazines : ajouter le chemin du fichier PDF
-        if ("MAGAZINE".equalsIgnoreCase(produit.getTypeProduit()) && request.getMagazinePath() != null) {
-            demande.setMagazinePath(request.getMagazinePath());
-        }
-
+        demande.setPdfMagazine(file.getBytes()); // 🧠 Ajoute le fichier dans la base
         demandePreparationRepository.save(demande);
 
-        return ResponseEntity.ok("✅ Fournisseur affecté avec succès !");
+        return ResponseEntity.ok("✅ PDF bien enregistré dans la base de données.");
+    } catch (IOException e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("Erreur lors de la lecture du fichier PDF");
     }
+}
+
+
+    @PostMapping("/affectation-auto")
+    public ResponseEntity<?> affectationAutomatique(@RequestParam Long sessionId, @RequestParam String dateLimite) {
+        try {
+            LocalDateTime limite = LocalDate.parse(dateLimite).atStartOfDay();
+
+            List<Object[]> quantites = commandeRepository.findQuantiteTotaleParProduitPourSession(sessionId);
+
+            for (Object[] row : quantites) {
+                Long produitId = (Long) row[0];
+                Integer quantiteTotale = ((Number) row[1]).intValue();
+
+                ProduitDisponibleCommande produit = produitDisponibleCommandeRepository.findById(produitId)
+                        .orElseThrow(() -> new RuntimeException("Produit non trouvé"));
+
+                // 🟡 Créer une seule demande sans fournisseur
+                boolean existe = demandePreparationRepository
+                        .findBySession_IdAndProduit_Id(sessionId, produitId)
+                        .isPresent();
+
+                if (!existe) {
+                    DemandePreparation demande = new DemandePreparation();
+                    demande.setProduit(produit);
+                    demande.setSessionCommande(sessionCommandeRepository.findById(sessionId)
+                            .orElseThrow(() -> new RuntimeException("Session non trouvée")));
+                    demande.setQuantiteDemandee(quantiteTotale);
+                    demande.setStatut(StatutDemandePreparation.EN_ATTENTE);
+                    demande.setDateLimitePreparation(limite);
+
+                    demandePreparationRepository.save(demande);
+                }
+            }
+
+            return ResponseEntity.ok("✅ Affectation automatique enregistrée (sans fournisseur).");
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("❌ Erreur durant l’affectation: " + e.getMessage());
+        }
+    }
+
+@GetMapping("/non-affectees")
+public ResponseEntity<?> getDemandesNonAffectees(@RequestParam Long sessionId) {
+    List<DemandePreparation> demandes = demandePreparationRepository
+            .findBySession_IdAndFournisseurIsNull(sessionId);
+    return ResponseEntity.ok(demandes);
+}
+
+    @PostMapping("/relancer")
+    public ResponseEntity<?> relancerAffectationPourProduit(
+            @RequestParam Long produitId,
+            @RequestParam Long sessionId,
+            @RequestParam String dateLimite // yyyy-MM-dd
+    ) {
+        try {
+            LocalDateTime limite = LocalDate.parse(dateLimite).atStartOfDay();
+
+            ProduitDisponibleCommande produit = produitDisponibleCommandeRepository.findById(produitId)
+                    .orElseThrow(() -> new RuntimeException("Produit non trouvé"));
+
+            SessionCommande session = sessionCommandeRepository.findById(sessionId)
+                    .orElseThrow(() -> new RuntimeException("Session non trouvée"));
+
+            // ✅ Récupérer une ancienne demande (si elle existe)
+            Optional<DemandePreparation> ancienneDemandeOpt = demandePreparationRepository
+                    .findFirstByProduit_IdAndSession_IdOrderByIdDesc(produitId, sessionId);
+
+            int nbAjoutes = 0;
+            String type = produit.getTypeProduit();
+            List<Utilisateur> fournisseurs = utilisateurRepository.findByRoleAndType("fournisseur",
+                    type.equalsIgnoreCase("MAGAZINE") ? "imprimeur" : "fournisseur papier thermique");
+
+            for (Utilisateur fournisseur : fournisseurs) {
+                boolean existe = demandePreparationRepository
+                        .findByFournisseur_IdUAndSession_IdAndProduit_Id(fournisseur.getIdU(), sessionId, produitId)
+                        .isPresent();
+                if (!existe) {
+                    DemandePreparation demande = new DemandePreparation();
+                    demande.setProduit(produit);
+                    demande.setFournisseur(null); // Attente de l'acceptation
+                    demande.setSessionCommande(session);
+                    demande.setStatut(StatutDemandePreparation.EN_ATTENTE);
+                    demande.setEtatCommande(EtatCommande.EN_PREPARATION);
+                    demande.setDateLimitePreparation(limite);
+
+                    // Copier quantite et PDF si existant
+                    if (ancienneDemandeOpt.isPresent()) {
+                        DemandePreparation ancienne = ancienneDemandeOpt.get();
+                        demande.setQuantiteDemandee(ancienne.getQuantiteDemandee());
+                        demande.setPdfMagazine(ancienne.getPdfMagazine());
+                    } else {
+                        demande.setQuantiteDemandee(0); // par défaut
+                    }
+
+                    demandePreparationRepository.save(demande);
+                    nbAjoutes++;
+                }
+            }
+
+            return ResponseEntity.ok("✅ Relance effectuée pour produit " + produitId +
+                    " → " + nbAjoutes + " fournisseurs disponibles.");
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("❌ Erreur relance : " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/demande-affectees")
+    public ResponseEntity<?> getDemandesAffecteesDerniereSession() {
+        List<SessionCommande> sessions = sessionCommandeRepository.findAllByDateFinBeforeNowOrderByDateFinDesc();
+        if (sessions.isEmpty()) {
+            return ResponseEntity.badRequest().body("❌ Aucune session clôturée trouvée.");
+        }
+        SessionCommande derniereSession = sessions.get(0);
+
+        List<DemandePreparation> affectees = demandePreparationRepository
+                .findByFournisseurIsNotNullAndSession_Id(derniereSession.getId());
+
+        return ResponseEntity.ok(affectees);
+    }
+    @PutMapping("/confirmer-livraison/{idDemande}")
+    public ResponseEntity<?> confirmerLivraison(@PathVariable Long idDemande) {
+        DemandePreparation demande = demandePreparationRepository.findById(idDemande)
+                .orElseThrow(() -> new RuntimeException("Demande introuvable"));
+
+        if (!EtatCommande.EN_ROUTE.equals(demande.getEtatCommande())) {
+            return ResponseEntity.badRequest().body("❌ La commande n’est pas encore en route !");
+        }
+
+        demande.setEtatCommande(EtatCommande.LIVREE);
+        demandePreparationRepository.save(demande);
+
+        return ResponseEntity.ok("✅ Commande confirmée comme livrée.");
+    }
+
+
+
+
+
+
 
 
 }
