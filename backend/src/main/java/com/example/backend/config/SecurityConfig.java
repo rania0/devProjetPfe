@@ -33,7 +33,8 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration config = new CorsConfiguration();
-                    config.setAllowedOrigins(List.of("http://localhost:3000")); // ✅ Change ici si nécessaire
+                    config.setAllowedOrigins(List.of("http://localhost:3000",
+                            "http://10.0.2.2:9090")); // ✅ Change ici si nécessaire
                     config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                     config.setAllowedHeaders(List.of("*"));
                     config.setExposedHeaders(List.of("Authorization"));

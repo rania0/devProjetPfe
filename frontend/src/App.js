@@ -14,6 +14,10 @@ import ModifierProfil from "./profile/ModifierProfil";
 import ResponsableInscription from "./responsable_point_vente/inscription_responsable/Inscription";
 import PageDemandes from "./admin/PageDemandes";
 import CreerSessionCommande from "./magasinier/CreerSessionCommande";
+import PageAffectation from "./magasinier/PageAffectation";
+import NotificationDemandes from "./fournisseur/NotificationDemandes";
+import MesDemandes from "./fournisseur/MesDemandes";
+
 // ✅ Vérifier si l'utilisateur est connecté
 const isAuthenticated = () => !!localStorage.getItem("accessToken");
 
@@ -68,6 +72,7 @@ function App() {
                             <Routes>
                                 <Route path="dashboard" element={<TestMagasinier />} />
                                 <Route path="session/creer" element={<CreerSessionCommande />} />
+                                <Route path="session/resultat" element={<PageAffectation/>} />
 
                             </Routes>
                         </Layout>
@@ -111,6 +116,8 @@ function App() {
                         <Layout>
                             <Routes>
                                 <Route path="dashboard" element={<TestFournisseur />} />
+                                <Route path="Demandes" element={<NotificationDemandes />} />
+                                <Route path="mes-demandes" element={<MesDemandes />} />
                             </Routes>
                         </Layout>
                     }

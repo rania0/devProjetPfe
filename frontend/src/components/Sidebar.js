@@ -35,11 +35,21 @@ const Sidebar = () => {
   <>
     <Link to="/magasinier/dashboard">Dashboard Magasinier</Link>
     <Link to="/magasinier/session/creer">Créer Session de commande</Link>
+    <Link to="/magasinier/session/resultat">resultat session </Link>
   </>
 )}
-            {userRole === "livreur" && <Link to="/livreur/dashboard">Dashboard Livreur</Link>}
+            {userRole === "livreur" && 
+            <Link to="/livreur/dashboard">Dashboard Livreur</Link>
+           }
             {userRole === "responsable_point_vente" && <Link to="/point-vente/dashboard">Dashboard Point de Vente</Link>}
-            {userRole === "fournisseur" && <Link to="/fournisseur/dashboard">Dashboard Fournisseur</Link>}
+            {userRole === "fournisseur" && (
+                <>
+                <Link to="/fournisseur/dashboard">Dashboard Fournisseur</Link>
+                <Link to="/fournisseur/Demandes">Notification Demandes</Link>
+                <Link to="/fournisseur/mes-demandes">Mes Demandes</Link>
+
+            </>
+            )}
 
             {/* 🔥 Bouton Déconnexion */}
             <div className="logout">

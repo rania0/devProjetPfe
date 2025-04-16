@@ -28,7 +28,7 @@ public class DemandePreparation {
 
     // Fournisseur sélectionné pour préparer ce produit
     @ManyToOne
-    @JoinColumn(name = "fournisseur_id", nullable = false)
+    @JoinColumn(name = "fournisseur_id", nullable = true)
     private Utilisateur fournisseur;
 
     // Session de commande liée
@@ -44,11 +44,23 @@ public class DemandePreparation {
     // Date limite fixée par le magasinier pour la réponse
     @Column(nullable = false)
     private LocalDateTime dateLimitePreparation;
-    @Column(name = "magazine_path")
-    private String magazinePath;
+//    @Column(name = "magazine_path")
+//    private String magazinePath;
     @Enumerated(EnumType.STRING)
     @Column(name = "etat_commande")
     private EtatCommande etatCommande = EtatCommande.EN_PREPARATION;
+    @Column(name = "pdf_magazine", columnDefinition = "LONGBLOB")
+    @Lob
+    private byte[] pdfMagazine;
+
+    public void setPdfMagazine(byte[] pdfMagazine) {
+        this.pdfMagazine = pdfMagazine;
+    }
+
+    public byte[] getPdfMagazine() {
+        return pdfMagazine;
+    }
+
 
     public EtatCommande getEtatCommande() {
         return etatCommande;
@@ -58,13 +70,13 @@ public class DemandePreparation {
         this.etatCommande = etatCommande;
     }
 
-    public String getMagazinePath() {
-        return magazinePath;
-    }
-
-    public void setMagazinePath(String magazinePath) {
-        this.magazinePath = magazinePath;
-    }
+//    public String getMagazinePath() {
+//        return magazinePath;
+//    }
+//
+//    public void setMagazinePath(String magazinePath) {
+//        this.magazinePath = magazinePath;
+//    }
 
     public Long getId() {
         return id;
@@ -102,7 +114,7 @@ public class DemandePreparation {
         return session;
     }
 
-    public void setSession(SessionCommande session) {
+    public void setSessionCommande(SessionCommande session) {
         this.session = session;
     }
 

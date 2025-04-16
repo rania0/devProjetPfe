@@ -1,0 +1,114 @@
+.affectation-container {
+    background-color: #e6f0ff;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.15);
+    margin: auto;
+    max-width: 1000px;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  
+  .icon-title {
+    color: #0056b3;
+    font-size: 1.4rem;
+  }
+  
+  .date-input-zone {
+    font-size: 1rem;
+    margin-bottom: 1.2rem;
+    color: #003366;
+  }
+  
+  .date-input-zone input {
+    margin-left: 8px;
+    border: 1px solid #b0d4ff;
+    border-radius: 6px;
+    padding: 4px 8px;
+    background-color: #fff;
+    color: #003366;
+  }
+  
+  .affectation-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1.5rem;
+  }
+  
+  .affectation-table th {
+    background-color: #cce5ff;
+    padding: 10px;
+    text-align: left;
+    color: #003366;
+  }
+  
+  .affectation-table td {
+    padding: 10px;
+    border-bottom: 1px solid #b0d4ff;
+    background-color: #ffffff;
+    color: #003366;
+  }
+  
+  .upload-btn {
+    background-color: #007bff;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 6px;
+    border: none;
+    margin-left: 10px;
+    font-weight: 500;
+    transition: 0.2s;
+  }
+  
+  .upload-btn:hover {
+    background-color: #3399ff;
+    transform: scale(1.05);
+  }
+  
+  .relancer-btn {
+    background-color: #ffc107;
+    color: #333;
+    padding: 5px 10px;
+    border-radius: 6px;
+    border: none;
+    font-weight: 500;
+    transition: 0.2s;
+  }
+  
+  .relancer-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  
+  .relancer-btn:hover:not(:disabled) {
+    background-color: #ffdb4d;
+    transform: scale(1.05);
+  }
+  
+  .affecter-btn {
+    background-color: #0056b3;
+    color: white;
+    padding: 10px 20px;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    transition: 0.3s ease-in-out;
+  }
+  
+  .affecter-btn:hover {
+    background-color: #007bff;
+    transform: scale(1.05);
+  }
+  .loading-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px 0;
+  }
+  
+  .loading-message {
+    margin-top: 10px;
+    color: #3498db;
+    font-weight: bold;
+    font-size: 1rem;
+  }
+    
